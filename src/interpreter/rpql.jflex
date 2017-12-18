@@ -35,5 +35,5 @@ WHITE=[ \t\r\n]
 "write" {return new CustomToken(Token.WRITE, yytext());}
 
 "$"{L}({L}|{D})* {return new CustomToken(Token.VAR, yytext());}
-("(-"{D}+")")|{D}+ {return new CustomToken(Token.INT, yytext());}
+"-"?{D}+ {return new CustomToken(Token.INT, yytext());}
 . {return new CustomToken(Token.ERROR, yytext());}
