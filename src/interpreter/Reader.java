@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.stream.Stream;
 
+import sun.nio.cs.ext.TIS_620;
+
 public class Reader {
 	private BufferedReader in;
 	private String line;
@@ -28,5 +30,9 @@ public class Reader {
 		this.line = this.in.readLine();
 		
 		return auxLine;
+	}
+	
+	public BufferedReader getBufferedReader() {
+		return this.in;
 	}
 }
