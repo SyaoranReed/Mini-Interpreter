@@ -9,11 +9,11 @@ public class PruebaLexer {
 		
 		while (true) {
 			//Busca la sgte expresion regular
-			Token token = lexer.yylex();
+			String token = lexer.yylex();
 			if (token == null) {
 				break;
 			}
-			System.out.printf("%-11s => %s\n",token.type(), token.value());
+			System.out.println(token);
 		}
 	}
 }

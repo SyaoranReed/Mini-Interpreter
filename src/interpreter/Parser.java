@@ -21,7 +21,7 @@ public class Parser {
 	public void parseInstruction() {
 		TokenType nextToken = nextToken();
 		
-		switch(token.getValue()) {
+		switch(nextToken.Value()) {
 			
 			case "while":
 				parseWHILE(); break;
@@ -36,7 +36,7 @@ public class Parser {
 			
 		}
 		
-		if(!tokenizer.getNextToken().getValue().equals(";")) return false;
+		if(!tokenizer.getNextToken().Value().equals(";")) return false;
 		
 		return true;
 	}
