@@ -1,7 +1,7 @@
 package interpreter;
 
 import java.util.HashMap;
-import java.math.BigInteger;;
+import java.math.BigInteger;
 
 public class Parser {
 
