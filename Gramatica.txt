@@ -1,0 +1,39 @@
+Gramática original.
+
+INSTS -> INST; INSTS | epsilon
+INST -> WHILE | ASSGN | IF | WRITE | READ
+
+WHILE -> while(OPLOG) do INSTS wend;
+ASSGN -> VAR = VAL
+IF -> if(OPLOG) then INSTS ELSE endif;
+ELSE -> else INSTS | epsilon
+READ -> read VAR
+WRITE -> write VAL
+
+OPLOG -> VAL == VAL | VAL != VAL | VAL <= VAL | VAL >= VAL | VAL < VAL | VAL > VAL
+
+VAR -> $LSAN
+VAL -> VAR | N | OPAR
+SAN -> CANSAN | CAN
+CAN -> L|D
+
+
+OPAR -> SR
+SR -> F + SR | F - SR
+SR -> MD | F
+MD -> F * MD' | F / MD' | F % MD'
+MD' -> MD | F
+F-> N | VAR
+
+L-> a|...|z
+N-> DN | epsilon
+D-> 0|...|9
+
+
+
+
+
+
+
+
+
