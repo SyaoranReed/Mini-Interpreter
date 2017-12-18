@@ -19,7 +19,7 @@ public class Parser {
 	
 
 	public void parseInstruction() {
-		Token nextToken = nextToken();
+		TokenType nextToken = nextToken();
 		
 		switch(token.getValue()) {
 			
@@ -45,6 +45,8 @@ public class Parser {
 		
 		if( !nextTokenValue().equals("(") ) return false;
 		parseOPLOG();
+		if( !nextTokenValue().equals(")") ) return false;
+		
 	}
 	
 	public ParserBooleanReturn parseOPLOG() {
@@ -62,7 +64,13 @@ public class Parser {
 		
 		//Si se parseó correctamente, entonces retornamos el resultado de la operación lógica.
 		
-		if(!operator.equals("==") ) return new ParserBooleanReturn(true, VAL1.value() == VAL2.value() );
+		if(operator.equals("==") ) return new ParserBooleanReturn(true, VAL1.value() == VAL2.value() );
+		if(operator.equals("!=") ) return new ParserBooleanReturn(true, VAL1.value() == VAL2.value() );
+		if(operator.equals("<=") ) return new ParserBooleanReturn(true, VAL1.value() == VAL2.value() );
+		if(operator.equals(">=") ) return new ParserBooleanReturn(true, VAL1.value() == VAL2.value() );
+		if(operator.equals("<") ) return new ParserBooleanReturn(true, VAL1.value() == VAL2.value() );
+		if(operator.equals(">") ) return new ParserBooleanReturn(true, VAL1.value() == VAL2.value() );
+		
 		
 		
 	}
@@ -71,11 +79,13 @@ public class Parser {
 		
 	}
 	
-	public Token nextToken() {
+	
+	
+	public TokenType nextToken() {
 		return this.tokenizer.nextToken();
 	}
 	
-	public Token previousToken() {
+	public TokenType previousToken() {
 		return this.tokenizer.previousToken();
 	}
 	

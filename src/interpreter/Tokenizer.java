@@ -5,6 +5,7 @@ public class Tokenizer {
 	private int nextTokenIndex;
 	
 	private Token[] tokens;
+	
 	public Tokenizer(Token[] tokens) {
 		nextTokenIndex = 0;
 		this.tokens = tokens;
