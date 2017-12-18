@@ -9,7 +9,7 @@ public class PruebaLexer {
 		
 		while (true) {
 			//Busca la sgte expresion regular
-			Token token = lexer.yylex();
+			String token = lexer.yylex();
 			if (token == null) {
 				break;
 			}

@@ -18,10 +18,10 @@ public class Parser {
 	}
 	
 
-	public void parseInstruction() {
-		TokenType nextToken = nextToken();
+	public void parseINST() {
+		String nextToken = nextToken();
 		
-		switch(token.getValue()) {
+		switch(nextToken) {
 			
 			case "while":
 				parseWHILE(); break;
@@ -43,9 +43,15 @@ public class Parser {
 	
 	public boolean parseWHILE() {
 		
-		if( !nextTokenValue().equals("(") ) return false;
+		if( !nextToken().equals("(") ) return false;
 		parseOPLOG();
-		if( !nextTokenValue().equals(")") ) return false;
+		if( !nextToken().equals(")") ) return false;
+		parseINSTS();
+		if( !nextToken().equals("wend") ) return false;
+		
+		
+		//Falta hacer el ciclo
+		return true;
 		
 	}
 	
@@ -55,25 +61,28 @@ public class Parser {
 		ParserIntegerReturn VAL1 = parseVAL();
 		if( !VAL1.isParsed() ) return new ParserBooleanReturn(false, null);
 		//OPLOG -> VAL == VAL | VAL != VAL | VAL <= VAL | VAL >= VAL | VAL < VAL | VAL > VAL
-		String operator = nextTokenValue();
+		
+		String operator = nextToken();
 		if(!operator.equals("==") || !operator.equals("!=") || 
 		   !operator.equals("<=") || !operator.equals(">=") ||
 		   !operator.equals("<") || !operator.equals(">")     ) return new ParserBooleanReturn(false, null);
+		
 		ParserIntegerReturn VAL2 = parseVAL();
+		
 		if( !VAL2.isParsed() ) return new ParserBooleanReturn(false, null);
 		
 		//Si se parseó correctamente, entonces retornamos el resultado de la operación lógica.
-		
 		if(operator.equals("==") ) return new ParserBooleanReturn(true, VAL1.value() == VAL2.value() );
-		if(operator.equals("!=") ) return new ParserBooleanReturn(true, VAL1.value() == VAL2.value() );
-		if(operator.equals("<=") ) return new ParserBooleanReturn(true, VAL1.value() == VAL2.value() );
-		if(operator.equals(">=") ) return new ParserBooleanReturn(true, VAL1.value() == VAL2.value() );
-		if(operator.equals("<") ) return new ParserBooleanReturn(true, VAL1.value() == VAL2.value() );
-		if(operator.equals(">") ) return new ParserBooleanReturn(true, VAL1.value() == VAL2.value() );
+		if(operator.equals("!=") ) return new ParserBooleanReturn(true, VAL1.value() != VAL2.value() );
+		if(operator.equals("<=") ) return new ParserBooleanReturn(true, VAL1.value() <= VAL2.value() );
+		if(operator.equals(">=") ) return new ParserBooleanReturn(true, VAL1.value() >= VAL2.value() );
+		if(operator.equals("<") ) return new ParserBooleanReturn(true, VAL1.value() < VAL2.value() );
+		if(operator.equals(">") ) return new ParserBooleanReturn(true, VAL1.value() > VAL2.value() );
 		
 		
 		
 	}
+	
 	
 	public ParserIntegerReturn parseVAL() {
 		
@@ -81,17 +90,14 @@ public class Parser {
 	
 	
 	
-	public TokenType nextToken() {
+	public String nextToken() {
 		return this.tokenizer.nextToken();
 	}
 	
-	public TokenType previousToken() {
+	public String previousToken() {
 		return this.tokenizer.previousToken();
 	}
 	
-	public String nextTokenValue() {
-		return this.tokenizer.nextTokenValue();
-	}
 	
 	
 	

@@ -4,28 +4,24 @@ public class Tokenizer {
 	
 	private int nextTokenIndex;
 	
-	private Token[] tokens;
+	private String[] tokens;
 	
-	public Tokenizer(Token[] tokens) {
-		nextTokenIndex = 0;
+	public Tokenizer(String[] tokens) {
+		nextTokenIndex = -1;
 		this.tokens = tokens;
 		
 	}
 	
 	//Retorna el siguiente token sacandolo de la lista.
-	public Token nextToken() {
-		Token nextToken = tokens[nextTokenIndex++];
-		return nextToken;
+	public String nextToken() {
+		return tokens[--nextTokenIndex];
 	}
 	
-	public Token previousToken() {
-		Token previousToken = tokens[--nextTokenIndex];
-		return previousToken;
+	public String previousToken() {
+		return tokens[--nextTokenIndex];
 	}
 	
-	public String nextTokenValue() { 
-		return nextToken().value();
-	}
+	
 	
 	
 }
