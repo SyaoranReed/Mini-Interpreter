@@ -1,6 +1,4 @@
 package interpreter;
-import static interpreter.Token.*;
-import static interpreter.TokenType.*;
 %%
 %class Lexer
 %type String
