@@ -3,9 +3,9 @@ Gramática original.
 INSTS -> INST; INSTS | epsilon
 INST -> WHILE | ASSGN | IF | WRITE | READ
 
-WHILE -> while(OPLOG) do INSTS wend;
+WHILE -> while(OPLOG) do INSTS wend
 ASSGN -> VAR = VAL
-IF -> if(OPLOG) then INSTS ELSE endif;
+IF -> if(OPLOG) then INSTS ELSE endif
 ELSE -> else INSTS | epsilon
 READ -> read VAR
 WRITE -> write VAL
@@ -17,10 +17,8 @@ VAL -> VAR | N | OPAR
 SAN -> CANSAN | CAN
 CAN -> L|D
 
-
-OPAR -> SR
-SR -> F + SR | F - SR
-SR -> MD | F
+OPAR -> F + OPAR | F - OPAR
+OPAR -> MD | F
 MD -> F * MD' | F / MD' | F % MD'
 MD' -> MD | F
 F-> N | VAR
