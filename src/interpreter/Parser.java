@@ -77,7 +77,7 @@ public class Parser {
 	
 	
 	
-	public boolean parseVAR() {
+	public ParserIntegerReturn parseVAR() {
 		String varToken = previousToken();
 		if(!varToken.charAt(0) != '$') return false;
 		
@@ -121,11 +121,12 @@ public class Parser {
 		String lookahead2 = tokenizer.lookAhead(2);
 		
 		if(lookahead2.equals("+") || lookahead2.equals("-") || lookahead2.equals("*") ||
-		   lookahead2.equals("/") || lookahead2.equals("%")) parseOPAR();
+		   lookahead2.equals("/") || lookahead2.equals("%")) return parseOPAR();
 		else if(lookahead1.startsWith("$")) parseVAR();
 		else if(Character.isDigit(lookahead1.charAt(0)) ) parseN();
 		
 	}
+	
 	
 	
 	
