@@ -21,22 +21,14 @@ public class Parser {
 	public void parseINST() {
 		String nextToken = nextToken();
 		
-		switch(nextToken) {
-			
-			case "while":
-				parseWHILE(); break;
-			case "$":
-				parseASSGN(); break;
-			case "if": 
-				parseIF(); break;
-			case "write": 
-				parseWRITE(); break;
-			case "read": 
-				parseREAD(); break;
-			
-		}
+		//Da problemas cuando programa está vacío.
+		if(nextToken.startsWith("$")) parseASSGN();
+		else if(nextToken.equals("if")) parseIF();
+		else if(nextToken.equals("while")) parseWHILE();
+		else if(nextToken.equals("read")) parseREAD();
+		else if(nextToken.equals("write")) parseWRITE();
 		
-		if(!tokenizer.getNextToken().getValue().equals(";")) return false;
+		if(!nextToken().equals(";")) return false;
 		
 		return true;
 	}
@@ -84,7 +76,54 @@ public class Parser {
 	}
 	
 	
+	
+	public boolean parseVAR() {
+		String varToken = previousToken();
+		if(!varToken.charAt(0) != '$') return false;
+		
+		//Agregar excepción para el caso en que haya solamente el $
+		//Verificando que el segundo caracter del identificador de la variable sea una letra.
+		
+		String varID = varToken.substring(1, varToken.length());
+		
+		if( !Character.isLowerCase(varID.charAt(0)) ) return false;
+		
+		
+			//Verificando que el resto del identificador corresponda a una secuencia alfanumérica.
+			for(int i = 1; i < varID.length(); i++) {
+				if( !(Character.isLowerCase(varID.charAt(i)) | Character.isDigit(varID.charAt(i)) ) ) return false; 
+			}
+		
+		
+		//Si tiene un identificador válido, entonces se agrega al diccionario de variables.
+		if(!this.variableMap.containsKey(varID))
+			this.variableMap.put(varID, null);
+		
+		
+		return true;
+		
+	}
+	
+	public boolean parseN() {
+		String numberToken = previousToken();
+		for(int i = 0; i < numberToken.length() ; i++) {
+			if(!Character.isDigit(numberToken.charAt(i))) return false;
+		}
+		return true;
+	}
+	
+	
 	public ParserIntegerReturn parseVAL() {
+		
+		if(tokenizer.lookAheadAllowed(2)) return new ParserIntegerReturn(false,null);
+		
+		String lookahead1 = tokenizer.lookAhead(1);
+		String lookahead2 = tokenizer.lookAhead(2);
+		
+		if(lookahead2.equals("+") || lookahead2.equals("-") || lookahead2.equals("*") ||
+		   lookahead2.equals("/") || lookahead2.equals("%")) parseOPAR();
+		else if(lookahead1.startsWith("$")) parseVAR();
+		else if(Character.isDigit(lookahead1.charAt(0)) ) parseN();
 		
 	}
 	
