@@ -39,12 +39,14 @@ public class Parser {
 		if(!tokenizer.lookAheadAllowed(1)) return false; 
 		String lookahead = tokenizer.lookAhead(1);
 		
-		if(lookahead.startsWith("$")) return parseASSGN();
-		else if(lookahead.equals("if")) return parseIF();
-		else if(lookahead.equals("while")) return parseWHILE();
-		else if(lookahead.equals("read")) return parseREAD();
-		else if(lookahead.equals("write")) return parseWRITE();
+		boolean parsed = false;
+		if(lookahead.startsWith("$")) parsed = parseASSGN();
+		else if(lookahead.equals("if")) parsed = parseIF();
+		else if(lookahead.equals("while")) parsed =  parseWHILE();
+		else if(lookahead.equals("read")) parsed = parseREAD();
+		else if(lookahead.equals("write")) parsed = parseWRITE();
 		
+		if(parsed && nextToken().equals(";")) return true;
 		return false;
 	}
 	
@@ -52,6 +54,7 @@ public class Parser {
 
 	
 	private boolean parseIF() {
+		if(!nextToken().equals("if")) return false;
 		if (!nextToken().equals("(")) return false;
 		boolean bool = parseOPLOG().value();
 		if (!nextToken().equals(")")) return false;
@@ -143,8 +146,8 @@ public class Parser {
 		// > VAL
 
 		String operator = nextToken();
-		if (!operator.equals("==") || !operator.equals("!=") || !operator.equals("<=") || !operator.equals(">=")
-				|| !operator.equals("<") || !operator.equals(">"))
+		if (!(operator.equals("==") || operator.equals("!=") || operator.equals("<=") || operator.equals(">=")
+				|| operator.equals("<") || operator.equals(">")))
 			return new ParserBooleanReturn(false, null);
 
 		ParserIntegerReturn VAL2 = parseVAL();
