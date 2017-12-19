@@ -3,7 +3,7 @@ package interpreter;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import com.sun.xml.internal.fastinfoset.vocab.ParserVocabulary;
+
 
 import java.math.BigInteger;
 
@@ -18,13 +18,20 @@ public class Parser {
 
 	}
 
+	public void parse() {
+		parseINSTS();
+	}
+	
 	public boolean parseINSTS() {
-		if (!tokenizer.hasNextToken()) {
-			return true;
-		}
-
-		boolean res = parseINST();
-		return parseINSTS() && res;
+//		if (!tokenizer.hasNextToken()) {
+//			return true;
+//		}
+//
+//		boolean res = parseINST();
+//		return parseINSTS() && res;
+		
+		parseINST();
+		return true;
 	}
 
 
@@ -32,14 +39,13 @@ public class Parser {
 		if(!tokenizer.lookAheadAllowed(1)) return false; 
 		String lookahead = tokenizer.lookAhead(1);
 		
-		//Da problemas cuando programa está vacío.
 		if(lookahead.startsWith("$")) return parseASSGN();
 		else if(lookahead.equals("if")) return parseIF();
 		else if(lookahead.equals("while")) return parseWHILE();
 		else if(lookahead.equals("read")) return parseREAD();
 		else if(lookahead.equals("write")) return parseWRITE();
 		
-		return true;
+		return false;
 	}
 	
 	
@@ -198,7 +204,7 @@ public class Parser {
 	}
 
 	public ParserIntegerReturn parseN() {
-		String numberToken = previousToken();
+		String numberToken = nextToken();
 
 		for(int i = 0; i < numberToken.length() ; i++) {
 			if(!Character.isDigit(numberToken.charAt(i))) return failedParseIntegerReturn();
@@ -209,7 +215,7 @@ public class Parser {
 
 	public ParserIntegerReturn parseVAL() {
 		
-		if(!tokenizer.lookAheadAllowed(2)) return failedParseIntegerReturn();
+		if(!tokenizer.lookAheadAllowed(2)) return failedParseIntegerReturn(); //aRREGLAR
 		
 		String lookahead1 = tokenizer.lookAhead(1);
 		String lookahead2 = tokenizer.lookAhead(2);
