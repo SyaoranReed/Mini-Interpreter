@@ -36,7 +36,7 @@ public class Tokenizer {
 	
 	
 	public boolean hasNextToken() {
-		return currentTokenIndex + 1 >= 0; 
+		return currentTokenIndex + 1 < tokens.length; 
 	}
 	
 	public boolean hasPreviousToken() {
