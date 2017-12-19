@@ -77,7 +77,7 @@ public class Parser {
 	
 	
 	public ParserIntegerReturn parseVAR() {
-		String varToken = previousToken();
+		String varToken = nextToken();
 		if(!varToken.charAt(0) != '$') return false;
 		
 		//Agregar excepción para el caso en que haya solamente el $
@@ -103,31 +103,39 @@ public class Parser {
 		
 	}
 	
-	public boolean parseN() {
+	public ParserIntegerReturn parseN() {
 		String numberToken = previousToken();
 		for(int i = 0; i < numberToken.length() ; i++) {
 			if(!Character.isDigit(numberToken.charAt(i))) return false;
 		}
-		return true;
+		return new ParserIntegerReturn(true, new BigInteger(numberToken));
 	}
 	
 	
 	public ParserIntegerReturn parseVAL() {
 		
-		if(tokenizer.lookAheadAllowed(2)) return new ParserIntegerReturn(false,null);
+		if(!tokenizer.lookAheadAllowed(2)) return failedParseIntegerReturn();
 		
 		String lookahead1 = tokenizer.lookAhead(1);
 		String lookahead2 = tokenizer.lookAhead(2);
 		
 		if(lookahead2.equals("+") || lookahead2.equals("-") || lookahead2.equals("*") ||
 		   lookahead2.equals("/") || lookahead2.equals("%")) return parseOPAR();
-		else if(lookahead1.startsWith("$")) parseVAR();
-		else if(Character.isDigit(lookahead1.charAt(0)) ) parseN();
+		else if(lookahead1.startsWith("$")) return parseVAR();
+		else if(Character.isDigit(lookahead1.charAt(0)) ) return parseN();
 		
+		return return failedParseIntegerReturn();
 	}
 	
 	
 	
+	public ParserIntegerReturn failedParseIntegerReturn() {
+		return new ParserIntegerReturn(false,null);
+	}
+	
+	public ParserBooleanReturn failedParseBooleanReturn() {
+		return new ParserBooleanReturn(false,null);
+	}
 	
 	public String nextToken() {
 		return this.tokenizer.nextToken();
