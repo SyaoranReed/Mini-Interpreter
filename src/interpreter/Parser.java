@@ -1,6 +1,7 @@
 package interpreter;
 
 import java.util.HashMap;
+import java.util.Scanner;
 
 import com.sun.xml.internal.fastinfoset.vocab.ParserVocabulary;
 
@@ -224,7 +225,7 @@ public class Parser {
 			if (value.matches("+|-")) continue;
 
 			if (value.startsWith("$")) {
-				value = parseVAR().value().toString();
+				value = parseVAR(false).value().toString();
 			}
 
 			// Obtengo el siguiente token
@@ -278,7 +279,7 @@ public class Parser {
 		while (value.compareTo(";") != 0) {
 
 			if (value.startsWith("$")) {
-				value = parseVAR().value().toString();
+				value = parseVAR(false).value().toString();
 			}
 
 			// Obtengo el siguiente token
@@ -322,5 +323,32 @@ public class Parser {
 
 		return new ParserIntegerReturn(true, result);
 	}
+	
+	public boolean parseWRITE() {
+		if(!nextToken().equals("write")) return false;
+		ParserIntegerReturn va = parseVAL();
+		if(!va.isParsed()) return false;
+		System.out.println(va.value());
+		return true;
+	}
+	
+	public boolean parseREAD() {
+		if(!nextToken().equals("read")) return false;
+		
+		String varToken = tokenizer.lookAhead(1);
+		if(tokenizer.lookAhead(1).length() == 1) return false;
+		String varID = varToken.substring(1);
+		
+		ParserIntegerReturn va = parseVAR(false);
+		if(!va.isParsed()) return false;
+		Scanner scanner = new Scanner(System.in);
+		String n = scanner.nextLine();
+		BigInteger number = new BigInteger(n);
+		
+		
+		this.variableMap.put(varID, number);
+		return true;
+	}
+
 
 }
