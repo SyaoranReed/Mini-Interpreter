@@ -16,7 +16,7 @@ public class ParserIntegerReturn {
 		return parsed;
 	}
 
-	public BigInteger result() {
+	public BigInteger value() {
 		return value;
 	}
 	

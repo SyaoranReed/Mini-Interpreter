@@ -17,7 +17,7 @@ public class ParserBooleanReturn {
 		return parsed;
 	}
 
-	public boolean result() {
+	public boolean value() {
 		return value;
 	}
 	
