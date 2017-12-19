@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Main {
 
 	public static void main(String[] args) throws IOException {
-		Reader reader = new Reader("/Users/Gabriel/Eclipse/Java/Mini-Interpreter/fibonaci.rpql");
+		Reader reader = new Reader("/Users/Gabriel/Eclipse/Java/Mini-Interpreter/testCode/fibonaci.rpql");
 		Lexer lexer = new Lexer(reader.getBufferedReader());
 		ArrayList<String> tokens = new ArrayList<String>();
 		while (true) {

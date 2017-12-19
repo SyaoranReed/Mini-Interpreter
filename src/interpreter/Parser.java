@@ -17,13 +17,13 @@ public class Parser {
 
 	}
 
-	public void parseINSTS() {
+	public boolean parseINSTS() {
 		if (!tokenizer.hasNextToken()) {
-			return;
+			return true;
 		}
 
-		parseINST();
-		parseINSTS();
+		boolean res = parseINST();
+		return parseINSTS() && res;
 	}
 
 
@@ -40,7 +40,30 @@ public class Parser {
 		
 		return true;
 	}
+	
+	
 
+	
+	private boolean parseIF() {
+		if (!nextToken().equals("(")) return false;
+		boolean bool = parseOPLOG().value();
+		if (!nextToken().equals(")")) return false;
+		if (!nextToken().equals("then")) return false;
+		if(bool) {
+			parseINSTS();
+		}
+		else {
+			if (nextToken().equals("else")) return parseElse();
+		}
+		if (!nextToken().equals("endif")) return false;
+
+		return true;
+	}
+	
+	private boolean parseElse() {
+		return parseINSTS();
+		
+	}
 	
 	public boolean parseASSGN() {
 		
@@ -81,7 +104,7 @@ public class Parser {
 	}
 
 	private boolean logicOperation(BigInteger izq, String op, BigInteger der) {
-		boolean result;
+		boolean result = false;
 		switch (op) {
 			case "<":
 				result = izq.compareTo(der) < 0;
@@ -224,7 +247,7 @@ public class Parser {
 			if (value.matches("+|-")) continue;
 
 			if (value.startsWith("$")) {
-				value = parseVAR().value().toString();
+				value = parseVAR(false).value().toString();
 			}
 
 			// Obtengo el siguiente token
@@ -278,7 +301,7 @@ public class Parser {
 		while (value.compareTo(";") != 0) {
 
 			if (value.startsWith("$")) {
-				value = parseVAR().value().toString();
+				value = parseVAR(false).value().toString();
 			}
 
 			// Obtengo el siguiente token
