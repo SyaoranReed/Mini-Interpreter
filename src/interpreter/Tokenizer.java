@@ -33,7 +33,13 @@ public class Tokenizer {
 		return currentTokenIndex + n  < tokens.length;
 	}
 	
+	public String lookBehind(int n) {
+		return tokens [currentTokenIndex - n];
+	}
 	
+	public boolean lookBehindAllowed(int n) {
+		return currentTokenIndex - n  >= 0;
+	}
 	
 	public boolean hasNextToken() {
 		return currentTokenIndex + 1 < tokens.length; 
@@ -43,6 +49,13 @@ public class Tokenizer {
 		return currentTokenIndex - 1 >= 0; 
 	}
 	
+	public int currentIndex() {
+		return currentTokenIndex;
+	}
+	
+	public void setCurrentIndex(int v) {
+		this.currentTokenIndex = v;
+	}
 	
 	
 	
