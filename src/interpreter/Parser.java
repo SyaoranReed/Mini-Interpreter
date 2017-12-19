@@ -300,7 +300,11 @@ public class Parser {
 			if (tokenizer.currentToken().compareTo(";") == 0) break;
 			value = nextToken();
 		}
-
+		
+		if (tokenizer.currentToken().compareTo(";") == 0) { 
+			tokenizer.previousToken();
+		}
+		
 		return new ParserIntegerReturn(true, result);
 	}
 
@@ -352,6 +356,9 @@ public class Parser {
 			if (nextToken.matches("+|-")) break;
 
 			value = nextToken();
+		}
+		if (tokenizer.currentToken().compareTo(";") == 0) { 
+			tokenizer.previousToken();
 		}
 
 		return new ParserIntegerReturn(true, result);
