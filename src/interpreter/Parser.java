@@ -23,15 +23,11 @@ public class Parser {
 	}
 	
 	public boolean parseINSTS() {
-//		if (!tokenizer.hasNextToken()) {
-//			return true;
-//		}
-//
-//		boolean res = parseINST();
-//		return parseINSTS() && res;
-		
-		parseINST();
-		return true;
+		if (!tokenizer.hasNextToken()) {
+			return true;
+		}
+		boolean res = parseINST();
+		return parseINSTS() && res;
 	}
 
 
@@ -52,6 +48,7 @@ public class Parser {
 
 	
 	private boolean parseIF() {
+		if(!nextToken().equals("if")) return false; 
 		if (!nextToken().equals("(")) return false;
 		boolean bool = parseOPLOG().value();
 		if (!nextToken().equals(")")) return false;
@@ -88,7 +85,7 @@ public class Parser {
 	}
 
 	public boolean parseWHILE() {
-
+		if(!nextToken().equals("while")) return false; 
 		if (!nextToken().equals("(")) return false;
 
 		// Guarda los valores para simular el if
@@ -247,14 +244,20 @@ public class Parser {
 	}
 
 	public ParserIntegerReturn parserOPAR() {
-		String value = nextToken();
+		String value = tokenizer.lookAhead(1);
 		BigInteger result = new BigInteger("0");
 
 		while (value.compareTo(";") != 0) {
-			if (value.matches("+|-")) continue;
+			if (value.matches("+|-")) { 
+				value = nextToken();
+				continue;
+			};
 
 			if (value.startsWith("$")) {
 				value = parseVAR(false).value().toString();
+			}
+			else {
+				nextToken();
 			}
 
 			// Obtengo el siguiente token
@@ -308,6 +311,7 @@ public class Parser {
 		while (value.compareTo(";") != 0) {
 
 			if (value.startsWith("$")) {
+				tokenizer.previousToken();
 				value = parseVAR(false).value().toString();
 			}
 
