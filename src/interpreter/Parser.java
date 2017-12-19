@@ -30,7 +30,7 @@ public class Parser {
 		parseINST();
 		parseINST();
 		parseINST();
-	
+		parseINST();
 		
 		return true;
 	}
@@ -103,11 +103,13 @@ public class Parser {
 		String op = tokenizer.lookAhead(2);//
 		String der = tokenizer.lookAhead(3);//
 		BigInteger izqq = (izq.startsWith("$"))? variableMap.get(izq.substring(1)):new BigInteger(izq);//
-		BigInteger derr = (izq.startsWith("$"))? variableMap.get(der.substring(1)):new BigInteger(der);//
+		BigInteger derr = (der.startsWith("$"))? variableMap.get(der.substring(1)):new BigInteger(der);//
 		parseOPLOG();
 		if (!nextToken().equals(")")) return false;
+		if (!nextToken().equals("do")) return false;
+		int index = tokenizer.currentIndex();//
 		while(logicOperation(izqq, op, derr)){//
-			int index = tokenizer.currentIndex();//
+			tokenizer.setCurrentIndex(index);//
 			parseINSTS();
 		}//
 		if (!nextToken().equals("wend")) return false;
@@ -276,7 +278,7 @@ public class Parser {
 		String operatorsPattern = operatorsPattern2 + or + operatorsPattern3;
 		
 		
-		String value = tokenizer.lookAhead(1);
+		String value = nextToken();
 		BigInteger result = new BigInteger("0");
 
 		while (value.compareTo(";") != 0) {
@@ -286,10 +288,8 @@ public class Parser {
 			};
 
 			if (value.startsWith("$")) {
+				previousToken();
 				value = parseVAR(false).value().toString();
-			}
-			else {
-				nextToken();
 			}
 
 			// Obtengo el siguiente token
@@ -309,8 +309,6 @@ public class Parser {
 			if (value.matches(operatorsPattern) && !(beforeToken.matches(operatorsPattern) || nextToken.matches(operatorsPattern))) {
 				return failedParseIntegerReturn();
 			}
-			// paso a la siguiente iteracion
-			if (value.matches(operatorsPattern3)) continue;
 
 			// Si el siguiente operador es una multiplicacion entonces este valor es parte
 			// de la regla MD
@@ -320,16 +318,16 @@ public class Parser {
 			}
 			switch (beforeToken) {
 				case "-":
-					result.subtract(new BigInteger(value));
+					result = result.subtract(new BigInteger(value));
 					break;
 
 				default:
-					result.add(new BigInteger(value));
+					result = result.add(new BigInteger(value));
 					break;
 			}
 			/*
 			 * La multiplicacion si llega al punto y coma queda mirando en este, entonces
-			 * esta condicion evita que avance el toquen y sale del while
+			 * esta condicion evita que avance el token y sale del while
 			 */
 			if (tokenizer.currentToken().compareTo(";") == 0) break;
 			value = nextToken();
@@ -343,11 +341,25 @@ public class Parser {
 	}
 
 	private ParserIntegerReturn parserMD() {
+		String plusOperator = Pattern.quote("+");
+		String multOperator = Pattern.quote("*");
+		String minusOperator = Pattern.quote("-");
+		String divOperator  = Pattern.quote("/");
+		String modOperator = Pattern.quote("%");
+		String or = "|";
+		String operatorsPattern2 = divOperator + or + modOperator + or + multOperator;
+		String operatorsPattern3 = plusOperator + or + minusOperator;
+		String operatorsPattern = operatorsPattern2 + or + operatorsPattern3;
+		
 		String value = tokenizer.currentToken();
 		BigInteger result = new BigInteger("1");
 
 		while (value.compareTo(";") != 0) {
-
+			if (value.matches(operatorsPattern2)) { 
+				value = nextToken();
+				continue;
+			};
+			
 			if (value.startsWith("$")) {
 				tokenizer.previousToken();
 				value = parseVAR(false).value().toString();
@@ -364,34 +376,23 @@ public class Parser {
 				beforeToken = tokenizer.lookBehind(1);
 			}
 			
-			String plusOperator = Pattern.quote("+");
-			String multOperator = Pattern.quote("*");
-			String minusOperator = Pattern.quote("-");
-			String divOperator  = Pattern.quote("/");
-			String modOperator = Pattern.quote("%");
-			String or = "|";
-			String operatorsPattern2 = divOperator + or + modOperator + or + multOperator;
-			String operatorsPattern3 = plusOperator + or + minusOperator;
-			String operatorsPattern = operatorsPattern2 + or + operatorsPattern3;
 
 			// Si hay 2 operadores seguidos el lenguaje esta mal
 			if (value.matches(operatorsPattern) && (beforeToken.matches(operatorsPattern) || nextToken.matches(operatorsPattern))) {
 				return failedParseIntegerReturn();
 			}
-			// paso a la siguiente iteracion
-			if (value.matches(operatorsPattern2)) continue;
 
 			switch (beforeToken) {
 				case "/":
-					result.divide(new BigInteger(value));
+					result = result.divide(new BigInteger(value));
 					break;
 
 				case "%":
-					result.mod(new BigInteger(value));
+					result = result.mod(new BigInteger(value));
 					break;
 
 				default:
-					result.multiply(new BigInteger(value));
+					result = result.multiply(new BigInteger(value));
 					break;
 			}
 

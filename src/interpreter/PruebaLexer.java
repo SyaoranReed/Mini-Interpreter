@@ -1,10 +1,15 @@
 package interpreter;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 public class PruebaLexer {
 	public static void main(String[] args) throws IOException {
-		Reader reader = new Reader("C:\\Users\\Benjamín\\git\\Mini-Interpreter\\testCode\\write.rpql");
+		BigInteger a = new BigInteger("10");
+		System.out.println(a);
+		a.add(new BigInteger("5"));
+		System.out.println(a);
+		Reader reader = new Reader("/Users/Gabriel/Eclipse/Java/Mini-Interpreter/testCode/assign.rpql");
 		Lexer lexer = new Lexer(reader.getBufferedReader());
 		
 		while (true) {
