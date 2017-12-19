@@ -2,9 +2,7 @@ package interpreter;
 
 import java.util.HashMap;
 import java.util.Scanner;
-
-
-
+import java.util.regex.Pattern;
 import java.math.BigInteger;
 
 public class Parser {
@@ -26,11 +24,14 @@ public class Parser {
 //		if (!tokenizer.hasNextToken()) {
 //			return true;
 //		}
-//
 //		boolean res = parseINST();
 //		return parseINSTS() && res;
-		
 		parseINST();
+		parseINST();
+		parseINST();
+		parseINST();
+	
+		
 		return true;
 	}
 
@@ -54,7 +55,9 @@ public class Parser {
 
 	
 	private boolean parseIF() {
+
 		if(!nextToken().equals("if")) return false;
+
 		if (!nextToken().equals("(")) return false;
 		boolean bool = parseOPLOG().value();
 		if (!nextToken().equals(")")) return false;
@@ -80,18 +83,19 @@ public class Parser {
 		String varToken = tokenizer.lookAhead(1);
 		if(tokenizer.lookAhead(1).length() == 1) return false;
 		String varID = varToken.substring(1);
-		ParserIntegerReturn va = parseVAR(true);
-		if(!va.isParsed()) return false;
+		ParserIntegerReturn var = parseVAR(true);
+		if(!var.isParsed()) return false;
 		if(!nextToken().equals("=")) return false; 
-		if(!parseVAL().isParsed() ) return false;
-		
-		this.variableMap.put(varID, va.value());
+		ParserIntegerReturn val = parseVAL();
+		if(!val.isParsed() ) return false;
+		BigInteger bigint = val.value();
+		this.variableMap.put(varID, val.value());
 		return true;
 		
 	}
 
 	public boolean parseWHILE() {
-
+		if(!nextToken().equals("while")) return false; 
 		if (!nextToken().equals("(")) return false;
 
 		// Guarda los valores para simular el if
@@ -142,8 +146,6 @@ public class Parser {
 
 		ParserIntegerReturn VAL1 = parseVAL();
 		if (!VAL1.isParsed()) return new ParserBooleanReturn(false, null);
-		// OPLOG -> VAL == VAL | VAL != VAL | VAL <= VAL | VAL >= VAL | VAL < VAL | VAL
-		// > VAL
 
 		String operator = nextToken();
 		if (!(operator.equals("==") || operator.equals("!=") || operator.equals("<=") || operator.equals(">=")
@@ -173,8 +175,9 @@ public class Parser {
 	//Si se llama al método de parseo desde una asignación, entonces el parseo se lleva a cabo correctamente
 	//aún si la variable no está inicializada. Si se llama de cualquier otro lugar, significa que se necesita
 	//el valor de la variable para llevar a cabo una instrucción, por lo que si no está incializada el parseo
-	//se considera fallido. La bandera "fromAssignment" indica si se llamó desde el parseo de una asignación.
-	public ParserIntegerReturn parseVAR(boolean fromAssignment) {
+	//se considera fallido. La bandera "fromAssignmentOrRead" indica si se llamó desde el parseo de una asignación o de
+	//de una instrucción read.
+	public ParserIntegerReturn parseVAR(boolean fromAssignmentOrRead) {
 
 		String varToken = nextToken();
 
@@ -188,28 +191,39 @@ public class Parser {
 		if( !Character.isLowerCase( varID.charAt(0)) ) return failedParseIntegerReturn();
 		
 		
-			//Verificando que el resto del identificador corresponda a una secuencia alfanumérica.
-			for(int i = 1; i < varID.length(); i++) {
-				if( !(Character.isLowerCase(varID.charAt(i)) || Character.isDigit(varID.charAt(i)) ) ) return failedParseIntegerReturn(); 
-			}
+		//Verificando que el resto del identificador corresponda a una secuencia alfanumérica.
+		for(int i = 1; i < varID.length(); i++) {
+			if( !(Character.isLowerCase(varID.charAt(i)) || Character.isDigit(varID.charAt(i)) ) ) return failedParseIntegerReturn(); 
+		}
 		
 		
-		//Si tiene un identificador válido, entonces se agrega al diccionario de variables.
-		if(!this.variableMap.containsKey(varID))
+		//Si tiene un identificador válido, entonces se agrega al diccionario de variables si es que no está y si la instruccion
+		//de la que viene es una asignación o un read.
+		if(fromAssignmentOrRead && !this.variableMap.containsKey(varID))
 			this.variableMap.put(varID, null);
-		else if(!fromAssignment && this.variableMap.get(varID) == null) return failedParseIntegerReturn();
-		else if(!fromAssignment && this.variableMap.get(varID) != null) return new ParserIntegerReturn(true,this.variableMap.get(varID) );
 		
-		return new ParserIntegerReturn(true, variableMap.get(varID));
+		//Caso en que variable no está inicializada.
+		else if(!fromAssignmentOrRead && !this.variableMap.containsKey(varID)) {
+			System.out.println("La variable: " + varID + " no está inicializada.");
+			return failedParseIntegerReturn();
+		}
+		//else if(!fromAssignment && this.variableMap.get(varID) == null) return failedParseIntegerReturn();
 		
-
+		/*else if(!fromAssignmentOrRead && this.variableMap.get(varID) != null) */
+		return new ParserIntegerReturn(true,this.variableMap.get(varID) );
+		
 		
 	}
 
 	public ParserIntegerReturn parseN() {
+		
 		String numberToken = nextToken();
 
-		for(int i = 0; i < numberToken.length() ; i++) {
+		boolean isNegative = numberToken.charAt(0) == '-';
+		int j = 0;
+		if(isNegative) j = 1;
+		
+		for(int i = j; i < numberToken.length() ; i++) {
 			if(!Character.isDigit(numberToken.charAt(i))) return failedParseIntegerReturn();
 
 		}
@@ -228,7 +242,7 @@ public class Parser {
 		   lookahead2.equals("/") || lookahead2.equals("%")) return parserOPAR();
 		else if(lookahead1.startsWith("$")) return parseVAR(false);
 
-		else if(Character.isDigit(lookahead1.charAt(0)) ) return parseN();
+		else if(Character.isDigit(lookahead1.charAt(0))  || lookahead1.charAt(0) == '-') return parseN();
 		
 		return failedParseIntegerReturn();
 	}
@@ -250,14 +264,32 @@ public class Parser {
 	}
 
 	public ParserIntegerReturn parserOPAR() {
-		String value = nextToken();
+		
+		String plusOperator = Pattern.quote("+");
+		String multOperator = Pattern.quote("*");
+		String minusOperator = Pattern.quote("-");
+		String divOperator  = Pattern.quote("/");
+		String modOperator = Pattern.quote("%");
+		String or = "|";
+		String operatorsPattern2 = divOperator + or + modOperator + or + multOperator;
+		String operatorsPattern3 = plusOperator + or + minusOperator;
+		String operatorsPattern = operatorsPattern2 + or + operatorsPattern3;
+		
+		
+		String value = tokenizer.lookAhead(1);
 		BigInteger result = new BigInteger("0");
 
 		while (value.compareTo(";") != 0) {
-			if (value.matches("+|-")) continue;
+			if (value.matches(operatorsPattern3)) { 
+				value = nextToken();
+				continue;
+			};
 
 			if (value.startsWith("$")) {
 				value = parseVAR(false).value().toString();
+			}
+			else {
+				nextToken();
 			}
 
 			// Obtengo el siguiente token
@@ -271,16 +303,18 @@ public class Parser {
 				beforeToken = tokenizer.lookBehind(1);
 			}
 
+			
+					
 			// Si hay 2 operadores seguidos el lenguaje esta mal
-			if (value.matches("*|/|%|+|-") && !(beforeToken.matches("*|/|%|+|-") || nextToken.matches("*|/|%|+|-"))) {
+			if (value.matches(operatorsPattern) && !(beforeToken.matches(operatorsPattern) || nextToken.matches(operatorsPattern))) {
 				return failedParseIntegerReturn();
 			}
 			// paso a la siguiente iteracion
-			if (value.matches("+|-")) continue;
+			if (value.matches(operatorsPattern3)) continue;
 
 			// Si el siguiente operador es una multiplicacion entonces este valor es parte
 			// de la regla MD
-			if (nextToken.matches("*|/|%")) {
+			if (nextToken.matches(operatorsPattern2)) {
 				ParserIntegerReturn rtrn = parserMD();
 				value = rtrn.value().toString();
 			}
@@ -300,7 +334,11 @@ public class Parser {
 			if (tokenizer.currentToken().compareTo(";") == 0) break;
 			value = nextToken();
 		}
-
+		
+		if (tokenizer.currentToken().compareTo(";") == 0) { 
+			tokenizer.previousToken();
+		}
+		
 		return new ParserIntegerReturn(true, result);
 	}
 
@@ -311,6 +349,7 @@ public class Parser {
 		while (value.compareTo(";") != 0) {
 
 			if (value.startsWith("$")) {
+				tokenizer.previousToken();
 				value = parseVAR(false).value().toString();
 			}
 
@@ -324,13 +363,23 @@ public class Parser {
 			if (tokenizer.lookBehindAllowed(1)) {
 				beforeToken = tokenizer.lookBehind(1);
 			}
+			
+			String plusOperator = Pattern.quote("+");
+			String multOperator = Pattern.quote("*");
+			String minusOperator = Pattern.quote("-");
+			String divOperator  = Pattern.quote("/");
+			String modOperator = Pattern.quote("%");
+			String or = "|";
+			String operatorsPattern2 = divOperator + or + modOperator + or + multOperator;
+			String operatorsPattern3 = plusOperator + or + minusOperator;
+			String operatorsPattern = operatorsPattern2 + or + operatorsPattern3;
 
 			// Si hay 2 operadores seguidos el lenguaje esta mal
-			if (value.matches("*|/|%|+|-") && (beforeToken.matches("*|/|%|+|-") || nextToken.matches("*|/|%|+|-"))) {
+			if (value.matches(operatorsPattern) && (beforeToken.matches(operatorsPattern) || nextToken.matches(operatorsPattern))) {
 				return failedParseIntegerReturn();
 			}
 			// paso a la siguiente iteracion
-			if (value.matches("*|/|%")) continue;
+			if (value.matches(operatorsPattern2)) continue;
 
 			switch (beforeToken) {
 				case "/":
@@ -348,9 +397,12 @@ public class Parser {
 
 			// Si el siguiente toquen es una suma termina el ciclo y vuelve al parser
 			// anterior.
-			if (nextToken.matches("+|-")) break;
+			if (nextToken.matches(operatorsPattern3)) break;
 
 			value = nextToken();
+		}
+		if (tokenizer.currentToken().compareTo(";") == 0) { 
+			tokenizer.previousToken();
 		}
 
 		return new ParserIntegerReturn(true, result);
@@ -371,7 +423,7 @@ public class Parser {
 		if(tokenizer.lookAhead(1).length() == 1) return false;
 		String varID = varToken.substring(1);
 		
-		ParserIntegerReturn va = parseVAR(false);
+		ParserIntegerReturn va = parseVAR(true);
 		if(!va.isParsed()) return false;
 		Scanner scanner = new Scanner(System.in);
 		String n = scanner.nextLine();
