@@ -13,7 +13,7 @@ public class PruebaLexer {
 			if (token == null) {
 				break;
 			}
-			System.out.printf("%-11s => %s\n",token.type(), token.value());
+			System.out.println(token);
 		}
 	}
 }

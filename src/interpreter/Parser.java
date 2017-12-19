@@ -28,7 +28,6 @@ public class Parser {
 		else if(nextToken.equals("read")) parseREAD();
 		else if(nextToken.equals("write")) parseWRITE();
 		
-		if(!nextToken().equals(";")) return false;
 		
 		return true;
 	}
