@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Main {
 
 	public static void main(String[] args) throws IOException {
-		Reader reader = new Reader("/Users/Gabriel/Eclipse/Java/Mini-Interpreter/testCode/assignwithmult.rpql");
+		Reader reader = new Reader("/Users/Gabriel/Eclipse/Java/Mini-Interpreter/testCode/while.rpql");
 		Lexer lexer = new Lexer(reader.getBufferedReader());
 		ArrayList<String> tokens = new ArrayList<String>();
 		while (true) {
@@ -18,6 +18,7 @@ public class Main {
 			tokens.add(token);
 			System.out.println(token);
 		}
+		tokens.add("eof");
 		
 		String[] tokensArray = new String[tokens.size()];
 		tokens.toArray(tokensArray);	

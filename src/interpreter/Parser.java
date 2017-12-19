@@ -111,6 +111,8 @@ public class Parser {
 		while(logicOperation(izqq, op, derr)){//
 			tokenizer.setCurrentIndex(index);//
 			parseINSTS();
+			izqq = (izq.startsWith("$"))? variableMap.get(izq.substring(1)):new BigInteger(izq);//
+			derr = (der.startsWith("$"))? variableMap.get(der.substring(1)):new BigInteger(der);//
 		}//
 		if (!nextToken().equals("wend")) return false;
 
@@ -272,7 +274,9 @@ public class Parser {
 		String minusOperator = Pattern.quote("-");
 		String divOperator  = Pattern.quote("/");
 		String modOperator = Pattern.quote("%");
+		String rBracket = Pattern.quote(")");
 		String or = "|";
+		String excluded = "<|<=|==|>=|>|!=|" + or + rBracket; 
 		String operatorsPattern2 = divOperator + or + modOperator + or + multOperator;
 		String operatorsPattern3 = plusOperator + or + minusOperator;
 		String operatorsPattern = operatorsPattern2 + or + operatorsPattern3;
@@ -315,6 +319,7 @@ public class Parser {
 			if (nextToken.matches(operatorsPattern2)) {
 				ParserIntegerReturn rtrn = parserMD();
 				value = rtrn.value().toString();
+				nextToken = tokenizer.lookAhead(1); //Pongo el siguiente token el que viene despues de las mult div o mod
 			}
 			switch (beforeToken) {
 				case "-":
@@ -325,11 +330,9 @@ public class Parser {
 					result = result.add(new BigInteger(value));
 					break;
 			}
-			/*
-			 * La multiplicacion si llega al punto y coma queda mirando en este, entonces
-			 * esta condicion evita que avance el token y sale del while
-			 */
-			if (tokenizer.currentToken().compareTo(";") == 0) break;
+			// Si el siguiente toquen es algun operador logico termina el ciclo y vuelve al parser
+			// anterior.
+			if (nextToken.matches((excluded))) break;
 			value = nextToken();
 		}
 		
@@ -346,7 +349,9 @@ public class Parser {
 		String minusOperator = Pattern.quote("-");
 		String divOperator  = Pattern.quote("/");
 		String modOperator = Pattern.quote("%");
+		String rBracket = Pattern.quote(")");
 		String or = "|";
+		String excluded = "<|<=|==|>=|>|!=|" + or + rBracket;
 		String operatorsPattern2 = divOperator + or + modOperator + or + multOperator;
 		String operatorsPattern3 = plusOperator + or + minusOperator;
 		String operatorsPattern = operatorsPattern2 + or + operatorsPattern3;
@@ -396,9 +401,9 @@ public class Parser {
 					break;
 			}
 
-			// Si el siguiente toquen es una suma termina el ciclo y vuelve al parser
+			// Si el siguiente toquen es una + o - o algun operador logico termina el ciclo y vuelve al parser
 			// anterior.
-			if (nextToken.matches(operatorsPattern3)) break;
+			if (nextToken.matches(operatorsPattern3 + "|" + excluded)) break;
 
 			value = nextToken();
 		}

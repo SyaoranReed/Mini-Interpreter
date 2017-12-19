@@ -5,10 +5,6 @@ import java.math.BigInteger;
 
 public class PruebaLexer {
 	public static void main(String[] args) throws IOException {
-		BigInteger a = new BigInteger("10");
-		System.out.println(a);
-		a.add(new BigInteger("5"));
-		System.out.println(a);
 		Reader reader = new Reader("/Users/Gabriel/Eclipse/Java/Mini-Interpreter/testCode/assign.rpql");
 		Lexer lexer = new Lexer(reader.getBufferedReader());
 		
@@ -20,5 +16,6 @@ public class PruebaLexer {
 			}
 			System.out.println(token);
 		}
+		
 	}
 }
