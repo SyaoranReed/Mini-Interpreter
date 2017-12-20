@@ -39,3 +39,4 @@ WHITE=[ \t\r\n]
 "$"{LET}({LET}|{DIG})* {return new Token(TokenType.VAR, yytext(), yyline + 1, yycolumn + 1);}
 {DIG}+ {return new Token(TokenType.INT, yytext(), yyline + 1, yycolumn + 1);}
 . {return new Token(TokenType.ERROR, yytext(), yyline + 1, yycolumn + 1);}
+<<EOF>> {return new Token(TokenType.EOF, yytext(), yyline + 1, yycolumn + 1);}

@@ -612,7 +612,9 @@ class Lexer {
 
       if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
         zzAtEOF = true;
-        return null;
+              {
+                return new Token(TokenType.EOF, yytext(), yyline + 1, yycolumn + 1);
+              }
       }
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
