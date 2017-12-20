@@ -33,5 +33,5 @@ WHITE=[ \t\r\n]
 "write" {return yytext();}
 
 "$"{L}({L}|{D})* {return yytext();}
-"-"?{D}+ {return yytext();}
+{D}+ {return yytext();}
 . {return yytext();}
