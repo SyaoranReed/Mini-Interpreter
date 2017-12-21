@@ -60,7 +60,13 @@ public class ShuntingYard {
 		}
 		return result;
 	}
-
+	
+	//Devuelve cuandos elementos se han agregado hasta ahora
+	public int sizeOpSoFar() {
+		return result.size();
+	}
+	
+	//Para probar que esta bien implementado
 	public static void main(String[] args) {
 		ShuntingYard shuntingYard = new ShuntingYard();
 		shuntingYard.algorithm("5");
@@ -74,5 +80,5 @@ public class ShuntingYard {
 			System.out.print(string + " ");
 		}
 	}
-
+	
 }

@@ -647,11 +647,11 @@ class Lexer {
             }
           case 26: break;
           case 8: 
-            { return new Token(TokenType.L_BRACKET, yytext(), yyline + 1, yycolumn + 1);
+            { return new Token(TokenType.L_PARENTH, yytext(), yyline + 1, yycolumn + 1);
             }
           case 27: break;
           case 9: 
-            { return new Token(TokenType.R_BRACKET, yytext(), yyline + 1, yycolumn + 1);
+            { return new Token(TokenType.R_PARENTH, yytext(), yyline + 1, yycolumn + 1);
             }
           case 28: break;
           case 10: 
