@@ -224,6 +224,7 @@ public class Parser {
 	
 	public void sendUnexpectedTokenArithmeticErrorMessage(TokenType expectedType1,TokenType expectedType2, Token actualToken) {
 		System.out.println("Error en la línea " +  actualToken.line + " columna " + actualToken.column);
+		System.out.println(actualToken);
 		//System.out.println("Se esperaba un " + );
 		//System.exit(arg0);
 	}
