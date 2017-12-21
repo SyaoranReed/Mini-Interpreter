@@ -186,19 +186,21 @@ public class Parser {
 		int i = 1;
 		ShuntingYard shuntingYard = new ShuntingYard();
 		while(!isNextTokenA(TokenType.SEMICOLON)) {
-			Token currentToken = nextToken();
+			Token currentToken = tokenizer.lookAhead(1);
 			//position is odd
 			if(i++ % 2 != 0) {
 				if(!(isCurrentTokenA(TokenType.VAR) || isCurrentTokenA(TokenType.INT))) {
 					sendUnexpectedTokenArithmeticErrorMessage(TokenType.VAR, TokenType.INT, currentToken);
 				}
+				nextToken();
 				shuntingYard.add(currentToken);
 			}
 			else{
 				if(isCurrentTokenA(TokenType.ARITHMETIC_OPERATOR)) {
+					nextToken();
 					shuntingYard.add(currentToken);
 				}
-				else if(isCurrentTokenA(TokenType.LOGICAL_OPERATOR)) {
+				else if(isCurrentTokenA(TokenType.LOGICAL_OPERATOR) || isCurrentTokenA(TokenType.R_PARENTH)) {
 					break;
 				}
 				else {
