@@ -28,17 +28,40 @@ public class Parser {
 	
 	public BlockNode parseWholeProgramInstructions() {
 		BlockNode wholeProgramBlock = new BlockNode();
+		ASTInstructionNode instruction; 
 		while(!isNextTokenA(TokenType.EOF)) {
-			wholeProgramBlock.addInstruction(parseInstruction());
+			instruction = parseInstruction();
+			if(instruction != null) wholeProgramBlock.addInstruction(instruction);
+			
 		}
 		return wholeProgramBlock;
 	}
+	
+
+	//Devuelve el nodo de la instrucción parseada.
+	public ASTInstructionNode parseInstruction() {
+		ASTInstructionNode instruction = null; 
+		if(isNextTokenA(TokenType.IF)) instruction = parseIf(); 
+		else if(isNextTokenA(TokenType.VAR)) instruction = parseAssignment();
+		else if(isNextTokenA(TokenType.WHILE)) instruction = parseWhile();
+		else if(isNextTokenA(TokenType.READ)) instruction = parseRead();
+		else if(isNextTokenA(TokenType.WRITE)) instruction = parseWrite();
+		
+		if(isNextTokenA(TokenType.SEMICOLON) ) {
+			if(instruction != null) expect(TokenType.SEMICOLON);
+		}
+	}
+	
+	
 	
 	
 	public ASTInstructionNode parseIf() {
 		expect(TokenType.IF);
 		expect(TokenType.L_PARENTH);
-		ConditionNode condition = parseThenInstructions();
+		ConditionNode condition = parseCondition();
+		BlockNode thenBlock = parseThenInstructions();
+		BlockNode elseBlock = null;
+		
 		if(isNextTokenA(TokenType.ELSE)){
 			nextToken();
 			parseElseInstructions();
@@ -46,7 +69,12 @@ public class Parser {
 		
 		expect(TokenType.ENDIF);
 		
+		return new IfNode(condition, thenBlock, elseBlock);
+		
+		
 	}
+	
+
 	
 	
 	//Parsea las instrucciones que están dentro de un bloque asociado a un 'if'.
@@ -69,12 +97,10 @@ public class Parser {
 	}
 	
 	
-	
-	//Devuelve el nodo de la instrucción parseada.
-	public ASTInstructionNode parseInstruction() {
+
+	public ConditionNode parseCondition() {
 		
 	}
-	
 	
 	
 	public boolean isNextTokenA(TokenType type) {
