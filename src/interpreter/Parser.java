@@ -18,8 +18,9 @@ import ast.WriteNode;
 public class Parser {
 
 	private Tokenizer tokenizer;
+	
 	public Parser(Tokenizer tokenizer) {
-		
+		this.tokenizer = tokenizer;
 		
 	}
 	
@@ -188,7 +189,7 @@ public class Parser {
 			Token currentToken = nextToken();
 			//position is odd
 			if(i++ % 2 != 0) {
-				if(!isCurrentTokenA(TokenType.VAR) || !isCurrentTokenA(TokenType.INT)) {
+				if(!(isCurrentTokenA(TokenType.VAR) || isCurrentTokenA(TokenType.INT))) {
 					sendUnexpectedTokenArithmeticErrorMessage(TokenType.VAR, TokenType.INT, currentToken);
 				}
 				shuntingYard.add(currentToken);

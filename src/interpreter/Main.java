@@ -9,6 +9,7 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		Reader reader = new Reader("/Users/Gabriel/Eclipse/Java/Mini-Interpreter/testCode/assign.rpql");
+
 		Lexer lexer = new Lexer(reader.getBufferedReader());
 		ArrayList<Token> tokens = new ArrayList<Token>();
 		while (true) {
