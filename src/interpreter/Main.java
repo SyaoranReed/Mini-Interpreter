@@ -13,7 +13,6 @@ public class Main {
 
 		Reader reader = new Reader("/Users/Gabriel/Eclipse/Java/Mini-Interpreter/testCode/if.rpql");
 
-
 		Lexer lexer = new Lexer(reader.getBufferedReader());
 		ArrayList<Token> tokens = new ArrayList<Token>();
 		while (true) {
