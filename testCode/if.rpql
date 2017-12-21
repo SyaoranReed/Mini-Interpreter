@@ -1,4 +1,33 @@
-$z = 3;
-if ($z > 2) then
- write 1;
+$z = 2;
+$j = 5;
+$c=0;
+
+if ($z > 1) then
+	if($j < 4) then
+		write 41414;
+	else
+		write 9999;
+	endif;
+	
+	if($j > 4) then
+		write 45;
+		if($j > 0) then
+			$w = 0;
+			while($c < 4) do
+				$w = $w + 25;
+				$c = $c + 1;
+				
+				$k = 1;
+				while($k < 4) do
+					$w = $w + 1;
+					$k = $k + 1;
+				wend;
+			wend;
+			write $w;
+		endif;
+	endif;
+	write 2000;
+else 
+	write 3;
 endif;
+write 4;

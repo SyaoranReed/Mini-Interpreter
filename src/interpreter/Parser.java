@@ -62,12 +62,15 @@ public class Parser {
 		expect(TokenType.IF);
 		expect(TokenType.L_PARENTH);
 		ConditionNode condition = parseCondition();
+		expect(TokenType.R_PARENTH);
+		expect(TokenType.THEN);
 		BlockNode thenBlock = parseThenInstructions();
 		BlockNode elseBlock = null;
 		
 		if(isNextTokenA(TokenType.ELSE)){
+			System.out.println("tiene else");
 			nextToken();
-			parseElseInstructions();
+			elseBlock = parseElseInstructions();
 		}
 		
 		expect(TokenType.ENDIF);
