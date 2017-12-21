@@ -13,7 +13,13 @@ public class Token {
 		this.column = column;
 	}
 	
-
+	@Override
+	public String toString() {
+		String string;
+		if(type == TokenType.ARISMETIC) return "operador aritmetico ('+', '-', '*', '/', '%')";
+		else if(type == TokenType.LOGIC) return "operador lógico ('==', '!=', '<=', '>=', '<', '>') "; 
+		else return "'" + value + "'";
+	}
 	
 	
 }

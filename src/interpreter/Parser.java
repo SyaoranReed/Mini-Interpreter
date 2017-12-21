@@ -2,10 +2,12 @@ package interpreter;
 
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.concurrent.locks.Condition;
 import java.util.regex.Pattern;
 
 import ast.ASTInstructionNode;
 import ast.BlockNode;
+import ast.ConditionNode;
 import ast.IfNode;
 
 import java.math.BigInteger;
@@ -34,8 +36,18 @@ public class Parser {
 	
 	
 	public ASTInstructionNode parseIf() {
+		expect(TokenType.IF);
+		expect(TokenType.L_PARENTH);
+		ConditionNode condition = parseThenInstructions();
+		if(isNextTokenA(TokenType.ELSE)){
+			nextToken();
+			parseElseInstructions();
+		}
+		
+		expect(TokenType.ENDIF);
 		
 	}
+	
 	
 	//Parsea las instrucciones que están dentro de un bloque asociado a un 'if'.
 	public BlockNode parseThenInstructions() {
@@ -47,14 +59,16 @@ public class Parser {
 	}
 	
 	//Parsea las instrucciones que están dentro de un bloque asociado a un 'if'.
-		public BlockNode parseElseInstructions() {
-			BlockNode elseBlock = new BlockNode();
-			while(!(isNextTokenA(TokenType.ENDIF))) {
-				elseBlock.addInstruction(parseInstruction());
-			}
-			
-			return elseBlock;
+	public BlockNode parseElseInstructions() {
+		BlockNode elseBlock = new BlockNode();
+		while(!(isNextTokenA(TokenType.ENDIF))) {
+			elseBlock.addInstruction(parseInstruction());
 		}
+		
+		return elseBlock;
+	}
+	
+	
 	
 	//Devuelve el nodo de la instrucción parseada.
 	public ASTInstructionNode parseInstruction() {
@@ -67,9 +81,22 @@ public class Parser {
 		return tokenizer.lookAhead(1).type == type;
 	}
 	
-	
-	public void sendExpectedTokenErrorMessage(TokenType expectedType, TokenType actualType) {
+	public void expect(TokenType tokenType) {
 		
+		Token token = this.tokenizer.lookAhead(1);
+		if(token.type == tokenType) {
+			this.tokenizer.nextToken();
+		}
+		else {
+			sendUnexpectedTokenErrorMessage(tokenType, token);
+		}
+	}
+	
+	
+	public void sendUnexpectedTokenErrorMessage(TokenType expectedType, Token actualToken) {
+		System.out.println("Error en la línea " +  actualToken.line + " columna " + actualToken.column);
+		//System.out.println("Se esperaba un " + );
+		//System.exit(arg0);
 	}
 	
 	public Token nextToken() {
