@@ -26,6 +26,8 @@ if ($z > 1) then
 			write $w;
 		endif;
 	endif;
+	read $so;
+	write $so;
 	write 2000;
 else 
 	write 3;

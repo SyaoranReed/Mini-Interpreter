@@ -9,7 +9,7 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 
-		Reader reader = new Reader("C:\\Users\\Benjamín\\git\\Mini-Interpreter\\testCode\\if.rpql");
+		Reader reader = new Reader("C:\\Users\\Benjamín\\git\\Mini-Interpreter\\testCode\\ifElse.rpql");
 
 
 		Lexer lexer = new Lexer(reader.getBufferedReader());
@@ -21,7 +21,7 @@ public class Main {
 			if (token.type == TokenType.EOF) {
 				break;
 			}
-			System.out.println(token.value);
+			
 		}		
 		Token[] tokensArray = new Token[tokens.size()];
 		tokens.toArray(tokensArray);	

@@ -1,32 +1,35 @@
 package ast;
 
+
+
 import java.math.BigInteger;
 
 import interpreter.Interpreter;
+import interpreter.Token;
 
 public class VariableNode implements ValueNode {
-	String id;
+	Token variable;
 	
 	
-	public VariableNode(String val) {
-		this.id = val;
+	public VariableNode(Token var) {
+		this.variable = var;
 	}
 
 	@Override
 	public BigInteger execute() {
 		
-		if(!Interpreter.variableMap.containsKey(id)) {
+		if(Interpreter.variableMap.get(variable.value) == null) {
 			sendNotInitializedVariableErrorMessage();
 			System.exit(0);
 		}
 		
-		return Interpreter.variableMap.get(id);
+		return Interpreter.variableMap.get(variable.value);
 		
 		
 	}
 
 	private void sendNotInitializedVariableErrorMessage() {
-		System.out.println("La variable " + id + " no ha sido inicializada");
+		System.out.println("Not initialized variable  " + variable.value + " in: line " + variable.line + "   column: " + variable.column);
 		
 	}
 	

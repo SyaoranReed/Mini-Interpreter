@@ -68,7 +68,6 @@ public class Parser {
 		BlockNode elseBlock = null;
 		
 		if(isNextTokenA(TokenType.ELSE)){
-			System.out.println("tiene else");
 			nextToken();
 			elseBlock = parseElseInstructions();
 		}
@@ -183,7 +182,7 @@ public class Parser {
 			this.tokenizer.nextToken();
 		}
 		else {
-			sendUnexpectedTokenErrorMessage(tokenType, token);
+			//sendUnexpectedTokenErrorMessage(tokenType, token);
 		}
 	}
 	
@@ -195,7 +194,7 @@ public class Parser {
 			//position is odd
 			if(i++ % 2 != 0) {
 				if(!(isCurrentTokenA(TokenType.VAR) || isCurrentTokenA(TokenType.INT))) {
-					sendUnexpectedTokenArithmeticErrorMessage(TokenType.VAR, TokenType.INT, currentToken);//
+					//sendUnexpectedTokenArithmeticErrorMessage(TokenType.VAR, TokenType.INT, currentToken);//
 				}
 				shuntingYard.add(currentToken);
 			}
@@ -208,7 +207,7 @@ public class Parser {
 					break;
 				}
 				else {
-					sendUnexpectedTokenErrorMessage(TokenType.ARITHMETIC_OPERATOR, currentToken);//
+					//sendUnexpectedTokenErrorMessage(TokenType.ARITHMETIC_OPERATOR, currentToken);//
 				}
 			}
 		}
@@ -222,17 +221,24 @@ public class Parser {
 		return new ArithmeticOperationNode(postfix);
 	}
 	
-	public void sendUnexpectedTokenErrorMessage(TokenType expectedType, Token actualToken) {
-		System.out.println("Error en la línea " +  actualToken.line + " columna " + actualToken.column);
-		//System.out.println("Se esperaba un " + );
-		//System.exit(arg0);
+	
+	//Intentos de mensajes de error
+	/*
+	public void sendUnexpectedTokenErrorMessage(TokenType expectedType, Token actualToken) 
+	{
+		if(actualToken.type == TokenType.ERROR)
+			System.out.println("Invalid token "  + actualToken + " in line " + actualToken.line + ", column " + actualToken.column);
+		//else if(actualToken.type == TokenType.EOF) System.out.println("Unexpected EOF token" + " in line " + actualToken.line + ", column " + actualToken.column);
+		else System.out.println("Unexpected token " + actualToken + " and expected " + expectedType  + " in line " + actualToken.line + ", column " + actualToken.column);
+
+		System.exit(0);
 	}
 	
 	public void sendUnexpectedTokenArithmeticErrorMessage(TokenType expectedType1,TokenType expectedType2, Token actualToken) {
 		System.out.println("Error en la línea " +  actualToken.line + " columna " + actualToken.column);
 		//System.out.println("Se esperaba un " + );
 		//System.exit(arg0);
-	}
+	}*/
 	
 	public Token nextToken() {
 		return tokenizer.nextToken();

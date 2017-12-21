@@ -15,11 +15,7 @@ public class Token {
 	
 	@Override
 	public String toString() {
-		String string;
-		if(type == TokenType.ARITHMETIC_OPERATOR) return "operador aritmetico ('+', '-', '*', '/', '%')";
-		else if(type == TokenType.LOGICAL_OPERATOR) return "operador lógico ('==', '!=', '<=', '>=', '<', '>') "; 
-		else return "'" + value + "'";
+		return this.value;
 	}
-	
 	
 }

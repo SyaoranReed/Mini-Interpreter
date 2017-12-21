@@ -1,0 +1,16 @@
+read $n;
+
+$cube = 0;
+
+$i = 0;
+while($i<$n) do
+	
+	$j = 0;
+	while($j<$n) do
+
+		$cube = $cube + $n;
+		$j = $j + 1;
+	wend;
+	$i = $i + 1;
+wend;
+write $cube;
