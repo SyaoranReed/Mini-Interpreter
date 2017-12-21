@@ -13,7 +13,7 @@ public class Token {
 		this.column = column;
 	}
 	
-	public boolean isType(TokenType type) {
-		return this.type == type;
-	}
+
+	
+	
 }
