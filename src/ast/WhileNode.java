@@ -12,7 +12,7 @@ public class WhileNode implements ASTInstructionNode  {
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
+		while(condition.execute()) doBlock.execute();
 		
 	}
 

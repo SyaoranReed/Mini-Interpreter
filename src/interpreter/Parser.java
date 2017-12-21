@@ -1,22 +1,19 @@
 package interpreter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
-import java.util.concurrent.locks.Condition;
-import java.util.regex.Pattern;
 
 import ast.ASTInstructionNode;
 import ast.ArithmeticOperationNode;
+import ast.AssignmentNode;
 import ast.BlockNode;
 import ast.ConditionNode;
 import ast.IfNode;
 import ast.NumberNode;
+import ast.ReadNode;
 import ast.ValueNode;
 import ast.VariableNode;
-import sun.nio.ch.sctp.Shutdown;
-
-import java.math.BigInteger;
+import ast.WhileNode;
+import ast.WriteNode;
 
 public class Parser {
 
@@ -53,9 +50,8 @@ public class Parser {
 		else if(isNextTokenA(TokenType.READ)) instruction = parseRead();
 		else if(isNextTokenA(TokenType.WRITE)) instruction = parseWrite();
 		
-		if(isNextTokenA(TokenType.SEMICOLON) ) {
-			if(instruction != null) expect(TokenType.SEMICOLON);
-		}
+		expect(TokenType.SEMICOLON);
+		return instruction;
 	}
 	
 	
@@ -113,7 +109,52 @@ public class Parser {
 	}
 
 	public ConditionNode parseCondition() {
+		ValueNode value1 = parseVAL();
+		expect(TokenType.LOGICAL_OPERATOR);
+		Token operator = currentToken();
+		ValueNode value2 = parseVAL();
 		
+		return new ConditionNode(value1, value2,operator);
+		
+	}
+	
+	public ASTInstructionNode parseWhile() {
+		expect(TokenType.WHILE);
+		expect(TokenType.L_PARENTH);
+		ConditionNode condition = parseCondition();
+		expect(TokenType.R_PARENTH);
+		BlockNode doBlock = parseDoInstructions();
+		expect(TokenType.WEND);
+		
+		return new WhileNode(condition, doBlock);
+	}
+	
+	public ASTInstructionNode parseWrite() {
+		expect(TokenType.WRITE);
+		ValueNode valueNode = parseVAL();
+		
+		return new WriteNode(valueNode);
+	}
+	
+	
+	public ASTInstructionNode parseRead() {
+		expect(TokenType.READ);
+		expect(TokenType.VAR);
+		
+		return new ReadNode(currentToken().value);
+	}
+	
+	public ASTInstructionNode parseAssignment() {
+		expect(TokenType.VAR);
+		String variableID = currentToken().value;
+		expect(TokenType.ASSIGN);
+		ValueNode valueNode = parseVAL();
+		
+		return new AssignmentNode(variableID, valueNode);
+	}
+	
+	public ValueNode parseVAL() {
+		return parseArithmeticOperation();
 	}
 	
 	
@@ -153,14 +194,14 @@ public class Parser {
 				shuntingYard.add(currentToken);
 			}
 			else{
-				if(isCurrentTokenA(TokenType.ARISMETIC)) {
+				if(isCurrentTokenA(TokenType.ARITHMETIC_OPERATOR)) {
 					shuntingYard.add(currentToken);
 				}
-				else if(isCurrentTokenA(TokenType.LOGIC)) {
+				else if(isCurrentTokenA(TokenType.LOGICAL_OPERATOR)) {
 					break;
 				}
 				else {
-					sendUnexpectedTokenErrorMessage(TokenType.ARISMETIC, currentToken);
+					sendUnexpectedTokenErrorMessage(TokenType.ARITHMETIC_OPERATOR, currentToken);
 				}
 			}
 		}

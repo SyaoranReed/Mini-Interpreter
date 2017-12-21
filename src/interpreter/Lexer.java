@@ -635,11 +635,11 @@ class Lexer {
             }
           case 23: break;
           case 5: 
-            { return new Token(TokenType.ARISMETIC, yytext(), yyline + 1, yycolumn + 1);
+            { return new Token(TokenType.ARITHMETIC_OPERATOR, yytext(), yyline + 1, yycolumn + 1);
             }
           case 24: break;
           case 6: 
-            { return new Token(TokenType.LOGIC, yytext(), yyline + 1, yycolumn + 1);
+            { return new Token(TokenType.LOGICAL_OPERATOR, yytext(), yyline + 1, yycolumn + 1);
             }
           case 25: break;
           case 7: 
