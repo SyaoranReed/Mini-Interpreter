@@ -20,7 +20,7 @@ public class Main {
 			}
 			System.out.println(token);
 		}		
-		String[] tokensArray = new String[tokens.size()];
+		Token[] tokensArray = new Token[tokens.size()];
 		tokens.toArray(tokensArray);	
 		Tokenizer tokenizer = new Tokenizer(tokensArray);
 		Parser parser = new Parser(tokenizer);

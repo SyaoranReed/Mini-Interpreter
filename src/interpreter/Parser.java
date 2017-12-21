@@ -1,22 +1,19 @@
 package interpreter;
 
-import java.util.HashMap;
-import java.util.Scanner;
-import java.util.concurrent.locks.Condition;
-import java.util.regex.Pattern;
-
-import javax.swing.text.html.parser.ParserDelegator;
+import java.util.ArrayList;
 
 import ast.ASTInstructionNode;
+import ast.ArithmeticOperationNode;
 import ast.AssignmentNode;
 import ast.BlockNode;
 import ast.ConditionNode;
 import ast.IfNode;
+import ast.NumberNode;
+import ast.ReadNode;
 import ast.ValueNode;
+import ast.VariableNode;
 import ast.WhileNode;
 import ast.WriteNode;
-
-import java.math.BigInteger;
 
 public class Parser {
 
@@ -102,7 +99,15 @@ public class Parser {
 		return elseBlock;
 	}
 	
-	
+	//Parsea las instrucciones que están dentro de un bloque asociado a un 'if'.
+	public BlockNode parseDoInstructions() {
+		BlockNode doBlock = new BlockNode();
+		while(!(isNextTokenA(TokenType.WEND))) {
+			doBlock.addInstruction(parseInstruction());
+		}
+
+		return doBlock;
+	}
 
 	public ConditionNode parseCondition() {
 		ValueNode value1 = parseVAL();
@@ -150,12 +155,20 @@ public class Parser {
 	}
 	
 	public ValueNode parseVAL() {
-		parseArithmeticOperation();
+		return parseArithmeticOperation();
 	}
 	
 	
 	public boolean isNextTokenA(TokenType type) {
 		return tokenizer.lookAhead(1).type == type;
+	}
+	
+	public boolean isCurrentTokenA(TokenType type) {
+		return tokenizer.currentToken().type == type;
+	}
+	
+	public Token currentToken() {
+		return tokenizer.currentToken();
 	}
 	
 	public void expect(TokenType tokenType) {
@@ -169,8 +182,47 @@ public class Parser {
 		}
 	}
 	
+	public ValueNode parseArithmeticOperation(){
+		int i = 1;
+		ShuntingYard shuntingYard = new ShuntingYard();
+		while(!isNextTokenA(TokenType.SEMICOLON)) {
+			Token currentToken = nextToken();
+			//position is odd
+			if(i++ % 2 != 0) {
+				if(!isCurrentTokenA(TokenType.VAR) || !isCurrentTokenA(TokenType.INT)) {
+					sendUnexpectedTokenArithmeticErrorMessage(TokenType.VAR, TokenType.INT, currentToken);
+				}
+				shuntingYard.add(currentToken);
+			}
+			else{
+				if(isCurrentTokenA(TokenType.ARITHMETIC_OPERATOR)) {
+					shuntingYard.add(currentToken);
+				}
+				else if(isCurrentTokenA(TokenType.LOGICAL_OPERATOR)) {
+					break;
+				}
+				else {
+					sendUnexpectedTokenErrorMessage(TokenType.ARITHMETIC_OPERATOR, currentToken);
+				}
+			}
+		}
+		ArrayList<String> postfix = shuntingYard.getPostfix();
+		if(postfix.size() == 1) {
+			String val = postfix.get(0);
+			if (val.startsWith("$")) return new VariableNode(val);
+			else return new NumberNode(val);
+			
+		}
+		return new ArithmeticOperationNode(postfix);
+	}
 	
 	public void sendUnexpectedTokenErrorMessage(TokenType expectedType, Token actualToken) {
+		System.out.println("Error en la línea " +  actualToken.line + " columna " + actualToken.column);
+		//System.out.println("Se esperaba un " + );
+		//System.exit(arg0);
+	}
+	
+	public void sendUnexpectedTokenArithmeticErrorMessage(TokenType expectedType1,TokenType expectedType2, Token actualToken) {
 		System.out.println("Error en la línea " +  actualToken.line + " columna " + actualToken.column);
 		//System.out.println("Se esperaba un " + );
 		//System.exit(arg0);

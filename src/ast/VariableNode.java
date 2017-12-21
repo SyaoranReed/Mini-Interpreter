@@ -6,6 +6,11 @@ import interpreter.Interpreter;
 
 public class VariableNode implements ValueNode {
 	String id;
+	
+	
+	public VariableNode(String val) {
+		this.id = val;
+	}
 
 	@Override
 	public BigInteger execute() {

@@ -24,8 +24,8 @@ WHITE=[ \t\r\n]
 "==" {return new Token(TokenType.LOGIC, yytext(), yyline + 1, yycolumn + 1);}
 "!=" {return new Token(TokenType.LOGIC, yytext(), yyline + 1, yycolumn + 1);}
 ";" {return new Token(TokenType.SEMICOLON, yytext(), yyline + 1, yycolumn + 1);}
-"(" {return new Token(TokenType.L_BRACKET, yytext(), yyline + 1, yycolumn + 1);}
-")" {return new Token(TokenType.R_BRACKET, yytext(), yyline + 1, yycolumn + 1);}
+"(" {return new Token(TokenType.L_PARENTH, yytext(), yyline + 1, yycolumn + 1);}
+")" {return new Token(TokenType.R_PARENTH, yytext(), yyline + 1, yycolumn + 1);}
 "if" {return new Token(TokenType.IF, yytext(), yyline + 1, yycolumn + 1);}
 "then" {return new Token(TokenType.THEN, yytext(), yyline + 1, yycolumn + 1);}
 "else" {return new Token(TokenType.ELSE, yytext(), yyline + 1, yycolumn + 1);}
