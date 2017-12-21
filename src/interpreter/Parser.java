@@ -101,6 +101,7 @@ public class Parser {
 	
 	//Parsea las instrucciones que están dentro de un bloque asociado a un 'if'.
 	public BlockNode parseDoInstructions() {
+		expect(TokenType.DO);
 		BlockNode doBlock = new BlockNode();
 		while(!(isNextTokenA(TokenType.WEND))) {
 			doBlock.addInstruction(parseInstruction());
@@ -186,25 +187,24 @@ public class Parser {
 		int i = 1;
 		ShuntingYard shuntingYard = new ShuntingYard();
 		while(!isNextTokenA(TokenType.SEMICOLON)) {
-			Token currentToken = tokenizer.lookAhead(1);
+			Token currentToken = nextToken();
 			//position is odd
 			if(i++ % 2 != 0) {
 				if(!(isCurrentTokenA(TokenType.VAR) || isCurrentTokenA(TokenType.INT))) {
-					sendUnexpectedTokenArithmeticErrorMessage(TokenType.VAR, TokenType.INT, currentToken);
+					sendUnexpectedTokenArithmeticErrorMessage(TokenType.VAR, TokenType.INT, currentToken);//
 				}
-				nextToken();
 				shuntingYard.add(currentToken);
 			}
 			else{
 				if(isCurrentTokenA(TokenType.ARITHMETIC_OPERATOR)) {
-					nextToken();
 					shuntingYard.add(currentToken);
 				}
 				else if(isCurrentTokenA(TokenType.LOGICAL_OPERATOR) || isCurrentTokenA(TokenType.R_PARENTH)) {
+					tokenizer.previousToken();
 					break;
 				}
 				else {
-					sendUnexpectedTokenErrorMessage(TokenType.ARITHMETIC_OPERATOR, currentToken);
+					sendUnexpectedTokenErrorMessage(TokenType.ARITHMETIC_OPERATOR, currentToken);//
 				}
 			}
 		}

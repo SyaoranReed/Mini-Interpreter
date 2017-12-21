@@ -8,7 +8,7 @@ import ast.BlockNode;
 public class Main {
 
 	public static void main(String[] args) throws IOException {
-		Reader reader = new Reader("/Users/Gabriel/Eclipse/Java/Mini-Interpreter/testCode/assign.rpql");
+		Reader reader = new Reader("/Users/Gabriel/Eclipse/Java/Mini-Interpreter/testCode/while.rpql");
 
 		Lexer lexer = new Lexer(reader.getBufferedReader());
 		ArrayList<Token> tokens = new ArrayList<Token>();
