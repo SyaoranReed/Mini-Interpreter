@@ -46,7 +46,9 @@ public class ArithmeticOperationNode implements ValueNode {
 				}
 			}
 			else {
-				if (op.startsWith("$")) result.push(Interpreter.variableMap.get(op));
+				if (op.startsWith("$")) {
+					result.push(new VariableNode(op).execute());
+				}
 				else result.push(new BigInteger(op));
 			}
 			i++;
