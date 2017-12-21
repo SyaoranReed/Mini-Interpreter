@@ -21,8 +21,9 @@ import java.math.BigInteger;
 public class Parser {
 
 	private Tokenizer tokenizer;
+	
 	public Parser(Tokenizer tokenizer) {
-		
+		this.tokenizer = tokenizer;
 		
 	}
 	
@@ -105,7 +106,7 @@ public class Parser {
 
 	public ConditionNode parseCondition() {
 		ValueNode value1 = parseVAL();
-		(TokenType.LOGICAL_OPERATOR);
+		expect(TokenType.LOGICAL_OPERATOR);
 		Token operator = currentToken();
 		ValueNode value2 = parseVAL();
 		
@@ -141,7 +142,7 @@ public class Parser {
 	
 	public ASTInstructionNode parseAssignment() {
 		expect(TokenType.VAR);
-		String variableID = currentToken(),value;
+		String variableID = currentToken().value;
 		expect(TokenType.ASSIGN);
 		ValueNode valueNode = parseVAL();
 		

@@ -3,6 +3,8 @@ package interpreter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import ast.BlockNode;
+
 public class Main {
 
 	public static void main(String[] args) throws IOException {
@@ -22,7 +24,9 @@ public class Main {
 		tokens.toArray(tokensArray);	
 		Tokenizer tokenizer = new Tokenizer(tokensArray);
 		Parser parser = new Parser(tokenizer);
-		//parser.parse();
+		BlockNode program = parser.parseProgram();
+		program.execute();
+		
 	}
 
 }
