@@ -182,6 +182,8 @@ public class Parser {
 			this.tokenizer.nextToken();
 		}
 		else {
+			System.out.println("The program has syntax errors.");
+			System.exit(0);
 			//sendUnexpectedTokenErrorMessage(tokenType, token);
 		}
 	}
@@ -211,11 +213,13 @@ public class Parser {
 				}
 			}
 		}
-		ArrayList<String> postfix = shuntingYard.getPostfix();
+		ArrayList<Token> postfix = shuntingYard.getPostfix();
 		if(postfix.size() == 1) {
-			String val = postfix.get(0);
-			if (val.startsWith("$")) return new VariableNode(val);
-			else return new NumberNode(val);
+			Token val = postfix.get(0);
+			
+			
+			if (val.value.startsWith("$")) return new VariableNode(val);
+			else return new NumberNode(val.value);
 			
 		}
 		return new ArithmeticOperationNode(postfix);
