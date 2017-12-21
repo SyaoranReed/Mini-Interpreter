@@ -4,11 +4,15 @@ import java.math.BigInteger;
 
 public class NumberNode implements ValueNode{
 
-	BigInteger number;
+	String number;
+	
+	public NumberNode(String number) {
+		this.number = number;
+	}
 
 	@Override
 	public BigInteger execute() {
-		return number;
+		return new BigInteger(number);
 	}
 	
 	

@@ -14,7 +14,8 @@ public class IfNode implements ASTInstructionNode {
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
+		if(condition.execute()) thenBlock.execute();
+		else if(elseBlock!= null) elseBlock.execute(); 
 		
 	}
 	

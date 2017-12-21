@@ -16,8 +16,8 @@ public class Token {
 	@Override
 	public String toString() {
 		String string;
-		if(type == TokenType.ARISMETIC) return "operador aritmetico ('+', '-', '*', '/', '%')";
-		else if(type == TokenType.LOGIC) return "operador lógico ('==', '!=', '<=', '>=', '<', '>') "; 
+		if(type == TokenType.ARITHMETIC_OPERATOR) return "operador aritmetico ('+', '-', '*', '/', '%')";
+		else if(type == TokenType.LOGICAL_OPERATOR) return "operador lógico ('==', '!=', '<=', '>=', '<', '>') "; 
 		else return "'" + value + "'";
 	}
 	

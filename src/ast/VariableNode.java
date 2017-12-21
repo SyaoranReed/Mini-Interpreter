@@ -10,7 +10,18 @@ public class VariableNode implements ValueNode {
 	@Override
 	public BigInteger execute() {
 		
+		if(!Interpreter.variableMap.containsKey(id)) {
+			sendNotInitializedVariableErrorMessage();
+			System.exit(0);
+		}
+		
 		return Interpreter.variableMap.get(id);
+		
+		
+	}
+
+	private void sendNotInitializedVariableErrorMessage() {
+		System.out.println("La variable " + id + "no ha sido inicializada");
 		
 	}
 	

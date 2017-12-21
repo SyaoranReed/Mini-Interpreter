@@ -5,10 +5,16 @@ import java.util.Scanner;
 import java.util.concurrent.locks.Condition;
 import java.util.regex.Pattern;
 
+import javax.swing.text.html.parser.ParserDelegator;
+
 import ast.ASTInstructionNode;
+import ast.AssignmentNode;
 import ast.BlockNode;
 import ast.ConditionNode;
 import ast.IfNode;
+import ast.ValueNode;
+import ast.WhileNode;
+import ast.WriteNode;
 
 import java.math.BigInteger;
 
@@ -47,9 +53,8 @@ public class Parser {
 		else if(isNextTokenA(TokenType.READ)) instruction = parseRead();
 		else if(isNextTokenA(TokenType.WRITE)) instruction = parseWrite();
 		
-		if(isNextTokenA(TokenType.SEMICOLON) ) {
-			if(instruction != null) expect(TokenType.SEMICOLON);
-		}
+		expect(TokenType.SEMICOLON);
+		return instruction;
 	}
 	
 	
@@ -99,7 +104,52 @@ public class Parser {
 	
 
 	public ConditionNode parseCondition() {
+		ValueNode value1 = parseVAL();
+		(TokenType.LOGICAL_OPERATOR);
+		Token operator = currentToken();
+		ValueNode value2 = parseVAL();
 		
+		return new ConditionNode(value1, value2,operator);
+		
+	}
+	
+	public ASTInstructionNode parseWhile() {
+		expect(TokenType.WHILE);
+		expect(TokenType.L_PARENTH);
+		ConditionNode condition = parseCondition();
+		expect(TokenType.R_PARENTH);
+		BlockNode doBlock = parseDoInstructions();
+		expect(TokenType.WEND);
+		
+		return new WhileNode(condition, doBlock);
+	}
+	
+	public ASTInstructionNode parseWrite() {
+		expect(TokenType.WRITE);
+		ValueNode valueNode = parseVAL();
+		
+		return new WriteNode(valueNode);
+	}
+	
+	
+	public ASTInstructionNode parseRead() {
+		expect(TokenType.READ);
+		expect(TokenType.VAR);
+		
+		return new ReadNode(currentToken().value);
+	}
+	
+	public ASTInstructionNode parseAssignment() {
+		expect(TokenType.VAR);
+		String variableID = currentToken(),value;
+		expect(TokenType.ASSIGN);
+		ValueNode valueNode = parseVAL();
+		
+		return new AssignmentNode(variableID, valueNode);
+	}
+	
+	public ValueNode parseVAL() {
+		parseArithmeticOperation();
 	}
 	
 	

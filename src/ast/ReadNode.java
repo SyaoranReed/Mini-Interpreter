@@ -10,6 +10,10 @@ public class ReadNode implements ASTInstructionNode {
 
 	String variableID; //La variable a la que va a asignar el valor leído.
 	
+	public ReadNode(String variableID) {
+		this.variableID = variableID;
+	}
+
 	@Override
 	public void execute() {
 		
