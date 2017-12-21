@@ -26,7 +26,7 @@ public class VariableNode implements ValueNode {
 	}
 
 	private void sendNotInitializedVariableErrorMessage() {
-		System.out.println("La variable " + id + "no ha sido inicializada");
+		System.out.println("La variable " + id + " no ha sido inicializada");
 		
 	}
 	

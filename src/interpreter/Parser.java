@@ -198,7 +198,7 @@ public class Parser {
 				if(isCurrentTokenA(TokenType.ARITHMETIC_OPERATOR)) {
 					shuntingYard.add(currentToken);
 				}
-				else if(isCurrentTokenA(TokenType.LOGICAL_OPERATOR)) {
+				else if(isCurrentTokenA(TokenType.LOGICAL_OPERATOR) || isCurrentToken(TokenType)) {
 					break;
 				}
 				else {
