@@ -101,7 +101,7 @@ public class Parser {
 	
 	//Parsea las instrucciones que están dentro de un bloque asociado a un 'if'.
 	public BlockNode parseDoInstructions() {
-		expect(TokenType.DO);
+		
 		BlockNode doBlock = new BlockNode();
 		while(!(isNextTokenA(TokenType.WEND))) {
 			doBlock.addInstruction(parseInstruction());
@@ -125,6 +125,7 @@ public class Parser {
 		expect(TokenType.L_PARENTH);
 		ConditionNode condition = parseCondition();
 		expect(TokenType.R_PARENTH);
+		expect(TokenType.DO);
 		BlockNode doBlock = parseDoInstructions();
 		expect(TokenType.WEND);
 		
