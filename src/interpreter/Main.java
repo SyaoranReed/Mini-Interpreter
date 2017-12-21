@@ -8,7 +8,9 @@ import ast.BlockNode;
 public class Main {
 
 	public static void main(String[] args) throws IOException {
+
 		Reader reader = new Reader("C:\\Users\\Benjamín\\git\\Mini-Interpreter\\testCode\\fibonaci.rpql");
+
 
 		Lexer lexer = new Lexer(reader.getBufferedReader());
 		ArrayList<Token> tokens = new ArrayList<Token>();
