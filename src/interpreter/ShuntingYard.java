@@ -24,7 +24,7 @@ public class ShuntingYard {
 	}
 
 	public void add(Token token) {
-		algorithm(token.toString());
+		algorithm(token.value);
 	}
 
 	private void algorithm(String value) {

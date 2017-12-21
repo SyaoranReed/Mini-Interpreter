@@ -18,7 +18,7 @@ public class Main {
 			if (token.type == TokenType.EOF) {
 				break;
 			}
-			System.out.println(token);
+			System.out.println(token.value);
 		}		
 		Token[] tokensArray = new Token[tokens.size()];
 		tokens.toArray(tokensArray);	
