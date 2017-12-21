@@ -12,17 +12,17 @@ WHITE=[ \t\r\n]
 %%
 {WHITE} {/*Ignore*/}
 "=" {return new Token(TokenType.ASSIGN, yytext(), yyline + 1, yycolumn + 1);}
-"+" {return new Token(TokenType.ARISMETIC, yytext(), yyline + 1, yycolumn + 1);}
-"*" {return new Token(TokenType.ARISMETIC, yytext(), yyline + 1, yycolumn + 1);}
-"-" {return new Token(TokenType.ARISMETIC, yytext(), yyline + 1, yycolumn + 1);}
-"/" {return new Token(TokenType.ARISMETIC, yytext(), yyline + 1, yycolumn + 1);}
-"%" {return new Token(TokenType.ARISMETIC, yytext(), yyline + 1, yycolumn + 1);}
-"<" {return new Token(TokenType.LOGIC, yytext(), yyline + 1, yycolumn + 1);}
-">" {return new Token(TokenType.LOGIC, yytext(), yyline + 1, yycolumn + 1);}
-"<=" {return new Token(TokenType.LOGIC, yytext(), yyline + 1, yycolumn + 1);}
-">=" {return new Token(TokenType.LOGIC, yytext(), yyline + 1, yycolumn + 1);}
-"==" {return new Token(TokenType.LOGIC, yytext(), yyline + 1, yycolumn + 1);}
-"!=" {return new Token(TokenType.LOGIC, yytext(), yyline + 1, yycolumn + 1);}
+"+" {return new Token(TokenType.ARITHMETIC_OPERATOR, yytext(), yyline + 1, yycolumn + 1);}
+"*" {return new Token(TokenType.ARITHMETIC_OPERATOR, yytext(), yyline + 1, yycolumn + 1);}
+"-" {return new Token(TokenType.ARITHMETIC_OPERATOR, yytext(), yyline + 1, yycolumn + 1);}
+"/" {return new Token(TokenType.ARITHMETIC_OPERATOR, yytext(), yyline + 1, yycolumn + 1);}
+"%" {return new Token(TokenType.ARITHMETIC_OPERATOR, yytext(), yyline + 1, yycolumn + 1);}
+"<" {return new Token(TokenType.LOGICAL_OPERATOR, yytext(), yyline + 1, yycolumn + 1);}
+">" {return new Token(TokenType.LOGICAL_OPERATOR, yytext(), yyline + 1, yycolumn + 1);}
+"<=" {return new Token(TokenType.LOGICAL_OPERATOR, yytext(), yyline + 1, yycolumn + 1);}
+">=" {return new Token(TokenType.LOGICAL_OPERATOR, yytext(), yyline + 1, yycolumn + 1);}
+"==" {return new Token(TokenType.LOGICAL_OPERATOR, yytext(), yyline + 1, yycolumn + 1);}
+"!=" {return new Token(TokenType.LOGICAL_OPERATOR, yytext(), yyline + 1, yycolumn + 1);}
 ";" {return new Token(TokenType.SEMICOLON, yytext(), yyline + 1, yycolumn + 1);}
 "(" {return new Token(TokenType.L_PARENTH, yytext(), yyline + 1, yycolumn + 1);}
 ")" {return new Token(TokenType.R_PARENTH, yytext(), yyline + 1, yycolumn + 1);}
